@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tproject.dscatalog.dto.CategoryDTO;
 import com.tproject.dscatalog.entities.Category;
 import com.tproject.dscatalog.respositories.CategoryRepository;
-import com.tproject.dscatalog.services.exceptions.EntityNotFoundException;
+import com.tproject.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class CategoryService {
@@ -41,4 +43,18 @@ public class CategoryService {
 		entity=repository.save(entity);
 		return new CategoryDTO(entity);
 	}
+	
+	@Transactional
+	public CategoryDTO update(Long id, CategoryDTO dto) {
+		try {
+			Category entity = repository.getOne(id);
+			entity.setName(dto.getName());
+			entity=repository.save(entity);
+			return new CategoryDTO(entity);
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException("id " + id + " not found ");
+		}
+	}
+		
 }
