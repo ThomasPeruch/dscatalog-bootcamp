@@ -1,7 +1,6 @@
 package com.tproject.dscatalog.services;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -35,7 +34,7 @@ public class CategoryService {
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<Category> opt = repository.findById(id);
-		Category entity = opt.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+		Category entity = opt.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new CategoryDTO(entity);
 		
 	}
